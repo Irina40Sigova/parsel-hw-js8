@@ -34,17 +34,24 @@ function onFormSubmit({target}){
       localStorage.removeItem('feedback-form-state'); 
     };
 
-    messageOutput();
 
- function messageOutput (){
-  const messageSave = localStorage.getItem('feedback-form-state');
-  const messageParse = JSON.parse(messageSave);
+   messageOutput();
 
-  if (messageSave){
-    email.value =messageParse.email;
-    message.value = messageParse.message;
-    console.log(messageParse.email);
-    console.log(messageParse.message);
+
+  function  messageOutput() {
+
+const saveMessage =localStorage.getItem('feedback-form-state'); 
+  if (saveMessage  === null) {
+    return;
   }
- };
+  const savedForm = JSON.parse(saveMessage);
+
+  Object.entries(savedForm).forEach(([name, value]) => {
+    formData[name] = value;
+    form.elements[name].value = value;
+  });
+};
+
+
+
 
