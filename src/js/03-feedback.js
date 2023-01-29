@@ -16,7 +16,7 @@ const onFormInput = function (e) {
     formData.message = message.value
 
     const formDataJSON = JSON.stringify(formData);
-    localStorage.setItem(FEEDBACK, formDataJSON);
+    localStorage.setItem('feedback-form-state', formDataJSON);
 };
 
 const onFormSubmit = function (e) {
