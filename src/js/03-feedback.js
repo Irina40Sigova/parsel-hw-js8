@@ -1,45 +1,50 @@
+import throttle from 'lodash.throttle'
 
 
- import throttle  from  "lodash.throttle";
-  
+const form = document.querySelector('.feedback-form');
+const message = document.querySelector('textarea');
+const email = document.querySelector('input');
 
- const form = document.querySelector('.feedback-form');
- const textarea = document.querySelector('.feedback-form textarea');
- 
- const formData = {};
- 
-   form.addEventListener('submit',onFormSubmit);
-   form.addEventListener('input', throttle (onFormInput),500);
- 
-  function onFormSubmit(e){
-      e.preventDefault();
-       
-      e.target.reset();
-       localStorage.removeItem('feedback-form-state');
+form.addEventListener('input', throttle (onFormInput),500);
+form.addEventListener('submit',onFormSubmit);
+
+const formData = {};
+
+  function onFormInput (e){
+       formData.email= email.value;
+       formData.message=message.value;
+
+      const formDataJSON = JSON.stringify(formData)
+      localStorage.setItem('feedback-form-state', formDataJSON);
+
   };
  
- 
-   function onFormInput ({target}){
-    const email = target.name;
-    const message = target.value;
- //    formData[target.name]=  target.value;
-    formData[email] = message;
-   
-    const formDataJSON = JSON.stringify(formData)
-    console.log(formDataJSON);
- 
-     localStorage.setItem('feedback-form-state', formDataJSON);
- };
- 
- 
- messageOutput();
- 
+
+function onFormSubmit({target}){
+    e.preventDefault();
+
+    const { el:
+       { email, message },
+      } = e.target;
+
+    const  formValue = { email: email.value, message: message.value };
+      console.log(formValue);
+
+    e.target.reset();     
+      localStorage.removeItem('feedback-form-state'); 
+    };
+
+    messageOutput();
+
  function messageOutput (){
-   const messageSave = localStorage.getItem('feedback-form-state');
- 
-   if (messageSave){
-     textarea.value =messageSave;
-   }
+  const messageSave = localStorage.getItem('feedback-form-state');
+  const messageParse = JSON.parse(messageSave);
+
+  if (messageSave){
+    email.value =messageParse.email;
+    message.value = messageParse.message;
+    console.log(messageParse.email);
+    console.log(messageParse.message);
+  }
  };
- 
- 
+
