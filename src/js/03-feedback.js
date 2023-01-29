@@ -1,57 +1,59 @@
 import throttle from 'lodash.throttle'
 
-
+ 
 const form = document.querySelector('.feedback-form');
-const message = document.querySelector('textarea');
 const email = document.querySelector('input');
-
-form.addEventListener('input', throttle (onFormInput),500);
-form.addEventListener('submit',onFormSubmit);
+const message = document.querySelector('textarea');
 
 const formData = {};
 
-  function onFormInput (e){
-       formData.email= email.value;
-       formData.message=message.value;
+formData.email = email.value;
+formData.message = message.value;
 
-      const formDataJSON = JSON.stringify(formData)
-      localStorage.setItem('feedback-form-state', formDataJSON);
+const onFormInput = function (e) {
+  
+    formData.email = email.value
+    formData.message = message.value
 
-  };
- 
+    const formDataJSON = JSON.stringify(formData);
+    localStorage.setItem(FEEDBACK, formDataJSON);
+};
 
-function onFormSubmit({target}){
+const onFormSubmit = function (e) {
     e.preventDefault();
 
-    const { el:
-       { email, message },
-      } = e.target;
+   const { elements: { email, message },} = e.target;
 
-    const  formValue = { email: email.value, message: message.value };
-      console.log(formValue);
+     const formValue = { email: email.value, message: message.value };
+    console.log(formValue);
+    
 
-    e.target.reset();     
-      localStorage.removeItem('feedback-form-state'); 
+    e.target.reset();
+    
+    localStorage.removeItem('feedback-form-state');
     };
 
 
-   messageOutput();
+const savedInfo = localStorage.getItem('feedback-form-state');
+const parsedInfo = JSON.parse(savedInfo);
 
+messageOutput();
 
-  function  messageOutput() {
+function messageOutput () {
 
-const saveMessage =localStorage.getItem('feedback-form-state'); 
-  if (saveMessage  === null) {
-    return;
-  }
-  const savedForm = JSON.parse(saveMessage);
+    if (savedInfo) {
+    
+    console.log(parsedInfo.email || '');
+    console.log(parsedInfo.message || '');
+        
+    email.value = parsedInfo.email || '';
+    message.value = parsedInfo.message || '';
+    
+    } 
+}
 
-  Object.entries(savedForm).forEach(([name, value]) => {
-    formData[name] = value;
-    form.elements[name].value = value;
-  });
-};
-
+form.addEventListener('input', throttle(onFormInput, 500));
+form.addEventListener('submit', onFormSubmit);
 
 
 
